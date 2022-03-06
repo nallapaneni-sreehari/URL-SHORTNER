@@ -21,33 +21,50 @@
         http.onload = function() {
             console.log("RESPONDED...");
         }
-}
+    }
 
-function openInNewTab(url) {
- window.open(url, '_blank').focus();
-}
+    function openInNewTab(url) {
+        window.open(url, '_blank').focus();
+    }
+
+    function refresh() {
+        window.location = '/';
+    }
 
 </script>
 <body>
+    <h2 class="text-center mt-5"> SHORTEN YOUR URL</h2>
+
     <div class="container">
-        <form action="/short" method="POST" class="col-md-6 my-4 form-inline">
-            <div class="input-group mb3">
-                <label for="full" class="visually-hidden-focusable">URL</label>
-                <input class="form-control mb-2" type="url" name="full" id="full" placeholder="Enter URL to shorten it" required>
+        <form action="/short" method="POST" class="col-md-12 my-4 form-inline">
+            <div class="row justify-content-md-center mt-5">
+                <div class="col-auto">
+                    <label for="full" class="visually-hidden-focusable">URL</label>
+                    <input class="form-control form-control-lg mb-2 text-center" type="url" name="full" id="full" placeholder="Enter URL to shorten it" required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary btn-lg mb-2 text-center">Shorten</button>
+                </div>
             </div>
-
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Short</button>
-            </div>
-
         </form>
 
-        <table class="col-md-8 table table-striped table-responsive table-bordered table-hover">
+        <span class="display-6 mb-3">
+            <i class="bi bi-clock-history"></i> History
+        </span>
+
+        <span class="display-6 mb-3 float-end" title="Refresh">
+            <i onClick="refresh()" class="bi bi-arrow-clockwise" style="cursor: pointer;"></i>
+        </span><br><br>
+
+        <table class="col-md-8 table table-responsive table-bordered table-hover">
             <thead class="thead-dark">
                 <tr>
+                    <th>#</th>
                     <th>Full URL</th>
                     <th>Short URL</th>
                     <th>Clicks</th>
+                    <th>Created At</th>
+                    <th>Recent Click</th>
                 </tr>
             </thead>
 
@@ -56,7 +73,10 @@ function openInNewTab(url) {
 
                     <tr>
                         <td>
-                            <span style="color: blue; text-decoration: underline; cursor: pointer;" onClick="openInNewTab('<%= url.full %>')" href="<%= url.full %>"><%= url.full.substring(0, 20) +'...' %></span>
+                            <%= urls.indexOf(url)+1 %>
+                        </td>
+                        <td>
+                            <span style="color: blue; text-decoration: underline; cursor: pointer;" onClick="openInNewTab('<%= url.full %>')" href="<%= url.full %>"><%= url.full.length>40 ? url.full.substring(0, 20) +'...' : url.full %></span>
                         </td>
     
                         <td>
@@ -64,7 +84,9 @@ function openInNewTab(url) {
                         </td>
     
                         <td><%= url.clickCount %></td>
-                        <td class="text-center"><i onClick = "deleteUrl('<%= url.short %>')" class="bi bi-trash btn-danger" style="cursor: pointer;"></i></td>
+                        <td><%= url.createdDate.toLocaleString()%></td>
+                        <td><%= url.recentClick.toLocaleString() %></td>
+                        <td class="text-center"><i onClick = "deleteUrl('<%= url.short %>'); refresh()" class="bi bi-trash btn-danger" style="cursor: pointer;"></i></td>
                     </tr>
 
                 <% }) %>

@@ -23,6 +23,9 @@ const ShortUrl = new mongoose.Schema({
     recentClick:{
         type: Date,
         default: Date.now
+    },
+    ipAddress:{
+        type:String
     }
 });
 

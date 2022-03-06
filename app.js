@@ -19,7 +19,9 @@ app.get('/', async (req, res)=>{
 
 app.post('/short', async (req, res)=>{
     console.log(req.body)
-    await ShortUrl.create({full:req.body.full});
+    var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    console.log("IP::: ", ip)
+    await ShortUrl.create({full:req.body.full, ipAddress:ip});
     res.redirect('/');
 });
 
@@ -27,7 +29,7 @@ app.get('/:shortid', async (req,res)=>{
 
     let url = await ShortUrl.findOne({short:req.params.shortid});
 
-    console.log("url:::: ", url)
+    // console.log("url:::: ", url)
     if(url == null)
     {
         return res.sendStatus(400);
