@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+
+    <title>Short URL</title>
+</head>
+<script>
+    function deleteUrl(data)
+    {
+        const http = new XMLHttpRequest()
+        http.open('POST', '/deleteUrl')
+        // http.setRequestHeader('Content-type', 'application/json')
+        http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        http.send(data);
+        http.onload = function() {
+            console.log("RESPONDED...");
+        }
+}
+
+function openInNewTab(url) {
+ window.open(url, '_blank').focus();
+}
+
+</script>
+<body>
+    <div class="container">
+        <form action="/short" method="POST" class="col-md-6 my-4 form-inline">
+            <div class="input-group mb3">
+                <label for="full" class="visually-hidden-focusable">URL</label>
+                <input class="form-control mb-2" type="url" name="full" id="full" placeholder="Enter URL to shorten it" required>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Short</button>
+            </div>
+
+        </form>
+
+        <table class="col-md-8 table table-striped table-responsive table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Full URL</th>
+                    <th>Short URL</th>
+                    <th>Clicks</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <% urls.forEach(url => { %>
+
+                    <tr>
+                        <td>
+                            <span style="color: blue; text-decoration: underline; cursor: pointer;" onClick="openInNewTab('<%= url.full %>')" href="<%= url.full %>"><%= url.full.substring(0, 20) +'...' %></span>
+                        </td>
+    
+                        <td>
+                            <span style="color: blue; text-decoration: underline; cursor: pointer;" onClick="openInNewTab('<%= url.short %>')" href="<%= url.short %>"><%= url.short %></span>
+                        </td>
+    
+                        <td><%= url.clickCount %></td>
+                        <td class="text-center"><i onClick = "deleteUrl('<%= url.short %>')" class="bi bi-trash btn-danger" style="cursor: pointer;"></i></td>
+                    </tr>
+
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
