@@ -3,12 +3,15 @@ const ShortUrl = require('./models/ShortUrl');
 const connecion = require('./connections/mongoose')
 const app = express();
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const PORT = process.env.PORT || 5000;
 app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({extended:false}));
 app.use(bodyParser.json());
+
+app.use(express.static(path.join(__dirname, "views")));
 
 connecion.connect();
 
